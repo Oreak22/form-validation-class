@@ -2,8 +2,18 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import * as yup from "yup";
 import { Field, Form, Formik } from "formik";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  decrement,
+  increaceByuserWish,
+  increment,
+} from "./redux/counterFactory";
 
 function App() {
+  const count = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
+  const [userInput, setUserInput] = useState(0);
+  console.log(count);
   let userSchema = yup.object({
     firstName: yup
       .string("this should be a text")
@@ -26,6 +36,30 @@ function App() {
 
   return (
     <>
+      <p>
+        Our current state = <span className="text-danger">{count}</span>
+        <div>
+          <button
+            className="btn btn-success"
+            onClick={() => dispatch(increment())}
+          >
+            increace
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => dispatch(decrement())}
+          >
+            decreace
+          </button>
+          <input type="number" onChange={(e) => setUserInput(e.target.value)} />
+          <button
+            className="btn btn-warning"
+            onClick={() => dispatch(increaceByuserWish(Number(userInput)))}
+          >
+            increace by user's will
+          </button>
+        </div>
+      </p>
       <Formik
         initialValues={{
           firstName: "",
