@@ -8,7 +8,8 @@ function App() {
     firstName: yup
       .string("this should be a text")
       .required("field is required")
-      .min(3, "a minimum of 3 letters is required"),
+      .min(3, "a minimum of 3 letters is required")
+      .max(25, "field can not handle more that 25 letters"),
     lastName: yup
       .string("this should be a text")
       .required("field is required")
@@ -18,10 +19,11 @@ function App() {
       .string()
       .required("password is required")
       .matches(
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/gm,
         "password not strong enough",
       ),
   });
+
   return (
     <>
       <Formik
@@ -32,32 +34,73 @@ function App() {
           password: "",
         }}
         validationSchema={userSchema}
-        onSubmit={(values) => {
+        onSubmit={(values, { setSubmitting }) => {
           console.log(values);
+          setSubmitting(false);
         }}
       >
-        {({ errors, touched }) => (
-          <Form>
-            <Field name="firstName" className="form-control" />
-            {touched.firstName && errors.firstName && (
-              <span className="text-danger">{errors.firstName}</span>
-            )}
-            <br />
-            <Field name="lastName" className="form-control" />
-            {touched.lastName && errors.lastName && (
-              <span>{errors.lastName}</span>
-            )}
-            <br />
-            <Field name="email" type="email" className="form-control" />{" "}
-            {touched.email && errors.email && <span>{errors.email}</span>}
-            <br />
-            <Field name="password" className="form-control" />
-            {touched.password && errors.password && (
-              <span>{errors.password}</span>
-            )}{" "}
-            <br />
-            <button type="submit">Submit</button>
-          </Form>
+        {({ errors, touched, isSubmitting }) => (
+          <div className="container vh-100 d-flex justify-content-center align-items-center">
+            <div
+              className="card shadow border-0"
+              style={{ width: "100%", maxWidth: "500px" }}
+            >
+              <div className="card-body p-4">
+                <h2 className="text-center mb-4">Create Account</h2>
+                <Form>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="firstName" className="form-label">
+                        First Name
+                      </label>
+                      <Field name="firstName" className="form-control" />
+                      {touched.firstName && errors.firstName && (
+                        <span className="text-danger">{errors.firstName}</span>
+                      )}
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="lastName" className="form-label">
+                        Last Name
+                      </label>
+                      <Field name="lastName" className="form-control" />
+                      {touched.lastName && errors.lastName && (
+                        <span className=" text-danger">{errors.lastName}</span>
+                      )}
+                    </div>
+                  </div>
+                  <Field name="email" type="email" className="form-control" />
+                  {touched.email && errors.email && (
+                    <span className=" text-danger">{errors.email}</span>
+                  )}
+                  <Field name="password" className="form-control" />
+                  {touched.password && errors.password && (
+                    <span className=" text-danger">{errors.password}</span>
+                  )}
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-100"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div class="loader"></div>
+                      </>
+                    ) : (
+                      "Sign Up"
+                    )}
+                  </button>
+                </Form>
+
+                <p className="text-center mt-3 mb-0">
+                  Already have an account?{" "}
+                  <a href="/login" className="text-decoration-none">
+                    Login
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
         )}
       </Formik>
     </>
