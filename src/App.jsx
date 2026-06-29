@@ -8,11 +8,20 @@ import {
   increaceByuserWish,
   increment,
 } from "./redux/counterFactory";
+import Oopcomponent from "./components/Oopcomponent";
 
 function App() {
   const count = useSelector((state) => state.counter.value);
   const dispatch = useDispatch();
   const [userInput, setUserInput] = useState(0);
+  const [data, setdata] = useState([
+    { name: "jsdvn", email: "ksndicnkxdcik" },
+    { name: "jsdvn", email: "ksndicnkxdcik" },
+    { name: "jsdvn", email: "ksndicnkxdcik" },
+    { name: "jsdvn", email: "ksndicnkxdcik" },
+  ]);
+
+  
   console.log(count);
   let userSchema = yup.object({
     firstName: yup
@@ -36,6 +45,9 @@ function App() {
 
   return (
     <>
+      {data.map((item, index) =>
+        index != data.length - 1 ? `${item.email}, ` : `${item.email} `,
+      )}
       <p>
         Our current state = <span className="text-danger">{count}</span>
         <div>
@@ -137,6 +149,8 @@ function App() {
           </div>
         )}
       </Formik>
+
+      <Oopcomponent/>
     </>
   );
 }
